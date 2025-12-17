@@ -78,4 +78,37 @@ This phase moves the approved model into production for inference, prioritizing 
 | **LoRA Fine-tuning** | **Speed & Cost:** Drastically reduces training time and memory footprint compared to full fine-tuning, accelerating the iteration cycle required for LLMOps. |
 | **SageMaker Pipelines** | **Automation & Governance:** Provides the necessary structure for automated CI/CD and enforces quality gates (Condition Step) before production deployment. |
 | **Bedrock Deployment** | **Serverless Scalability:** Eliminates the operational overhead of managing GPU endpoints, autoscaling, and patching. Offers simple, consumption-based pricing and a unified API for enterprise use. |
+
 | **TF-IDF Subsetting** | **Data Quality:** Ensures the model is trained on the most **semantically rich** (jargon) and **representative** data, maximizing knowledge transfer while minimizing compute time. |
+
+
+import csv
+import json
+from pathlib import Path
+
+# Input / Output paths
+input_csv = Path("data/raw/svg_color.csv")
+output_json = Path("data/svg/final_dataset_color.json")
+
+output_json.parent.mkdir(parents=True, exist_ok=True)
+
+dataset = []
+
+with open(input_csv, newline="", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    for idx, row in enumerate(reader):
+        dataset.append({
+            "id": idx,
+            "question": row["question"],
+            "answer": row["answer"],
+            "vg_code": row["svg"],
+            "vg_format": "svg",
+            "meta": {
+                "type": "color"
+            }
+        })
+
+with open(output_json, "w", encoding="utf-8") as f:
+    json.dump(dataset, f, indent=2)
+
+print(f"Saved {len(dataset)} samples to {output_json}")
