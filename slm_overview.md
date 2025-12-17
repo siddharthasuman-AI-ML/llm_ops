@@ -82,11 +82,13 @@ This phase moves the approved model into production for inference, prioritizing 
 | **TF-IDF Subsetting** | **Data Quality:** Ensures the model is trained on the most **semantically rich** (jargon) and **representative** data, maximizing knowledge transfer while minimizing compute time. |
 
 
+=====================================================
+
+
 import csv
 import json
 from pathlib import Path
 
-# Input / Output paths
 input_csv = Path("data/raw/svg_color.csv")
 output_json = Path("data/svg/final_dataset_color.json")
 
@@ -99,16 +101,15 @@ with open(input_csv, newline="", encoding="utf-8") as f:
     for idx, row in enumerate(reader):
         dataset.append({
             "id": idx,
-            "question": row["question"],
-            "answer": row["answer"],
-            "vg_code": row["svg"],
-            "vg_format": "svg",
-            "meta": {
-                "type": "color"
-            }
+            "question": row["Question"],
+            "answer": row["Answer"],
+            "vg_code": row["Code"],
+            "vg_format": "svg"
         })
 
 with open(output_json, "w", encoding="utf-8") as f:
     json.dump(dataset, f, indent=2)
 
 print(f"Saved {len(dataset)} samples to {output_json}")
+
+
