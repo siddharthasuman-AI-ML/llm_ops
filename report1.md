@@ -208,3 +208,58 @@ Performance metrics
 13. One-Line Executive Summary
 
 VGBench ensures the guardrail SLM makes the right allow/block decisions, while separate chatbot evaluations ensure safe and usable user interactions; both are required for a production-ready system.
+
+====================================================================
+
+huggingface-cli download Qwen/Qwen3-4B-Instruct-2507 ^
+--local-dir models\qwen-4b ^
+--local-dir-use-symlinks False
+
+
+dir models\qwen-4b
+
+
+run_qwen.py
+
+
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import torch
+
+MODEL_PATH = "models/qwen-4b"
+
+print("Loading tokenizer...")
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+
+print("Loading model (this may take time)...")
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL_PATH,
+    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+    device_map="auto"
+)
+
+prompt = "Explain artificial intelligence in simple words."
+
+inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+with torch.no_grad():
+    output = model.generate(
+        **inputs,
+        max_new_tokens=150,
+        temperature=0.7
+    )
+
+print("\nModel output:\n")
+print(tokenizer.decode(output[0], skip_special_tokens=True))
+
+
+
+
+=========
+python run_qwen.py
+
+
+
+
+
+
+
