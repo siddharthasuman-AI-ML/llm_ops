@@ -1,0 +1,98 @@
+
+---
+
+# 📄 FILE 2  
+## `Streamlit_to_API_Mapping.md`
+
+```md
+# Streamlit UI → API Call Mapping
+
+---
+
+## 1. Core Rule
+
+Streamlit:
+- Collects input
+- Calls API
+- Displays response
+
+Streamlit NEVER:
+- Touches database
+- Runs training
+- Stores files locally
+
+---
+
+## 2. Page-wise Mapping
+
+---
+
+### Home / Dashboard
+
+| UI Action | API Called |
+|---------|-----------|
+| Load dashboard | GET /datasets |
+|  | GET /models |
+|  | GET /experiments |
+
+---
+
+### Datasets Page
+
+| UI Action | API |
+|---------|----|
+| Upload dataset | POST /datasets/upload |
+| View datasets | GET /datasets |
+| Download dataset | GET /datasets/{id}/download |
+
+---
+
+### Models Page
+
+| UI Action | API |
+|---------|----|
+| List models | GET /models |
+| View model details | GET /models/{id} |
+
+---
+
+### Experiments Page
+
+| UI Action | API |
+|---------|----|
+| View experiments | GET /experiments |
+| View experiment | GET /experiments/{id} |
+| Poll status | GET /experiments/{id} |
+
+Polling interval: 5–10 seconds
+
+---
+
+### Evaluations Page
+
+| UI Action | API |
+|---------|----|
+| View evaluations | GET /evaluations |
+| View metrics | GET /evaluations/{id} |
+
+---
+
+### Train Model Wizard
+
+| Step | API |
+|----|----|
+| Load base models | GET /models |
+| Load datasets | GET /datasets |
+| Launch training | POST /experiments |
+
+---
+
+## 3. Error Handling
+
+- API error → show message
+- No stack traces
+- Disable submit on validation failure
+
+---
+
+## END
